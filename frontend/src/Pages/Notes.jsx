@@ -37,7 +37,7 @@ const Notes = () => {
                 return <Note key={note._id} index={i} note={note}/>
             })}
         </div>
-    ) : ' no notes to show'}
+    ) : <p className="no-notes">You have zero notes</p>}
     </div>
   )
 }

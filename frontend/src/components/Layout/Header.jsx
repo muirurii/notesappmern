@@ -8,7 +8,7 @@ const Header = () => {
   const {user} = useContext(GlobalContext);
   return (
     <header>
-        <h2>Dairyy</h2>
+        <h2><Link to={'/'}>NotesManager</Link></h2>
         <nav>
             {!user.name && <Link to={'/'}>Login / Signup</Link>}
             {user.name && (<>

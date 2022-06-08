@@ -1,7 +1,7 @@
 import { useState,useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { GlobalContext } from "../store/GlobalState";
-import {BiLogOutCircle} from 'react-icons/bi';
+import {CgLogIn} from 'react-icons/cg';
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -69,8 +69,8 @@ const Signup = () => {
                return showMessage('error',data.message);
             }
             showMessage('success','Registered');
-            setUser({name:data.username,token:data.accessToken})
-            navigate('/profile');
+            setUser({name:data.username,email:data.email,token:data.accessToken})
+            navigate('/notes');
         } catch (error) {
             showMessage('error','Unable to connect');
         }
@@ -78,7 +78,7 @@ const Signup = () => {
 
     return (
       <div>
-          <h2>Sign up <BiLogOutCircle /> </h2>
+          <h2 className="center"><span>Sign up</span> <CgLogIn /></h2>
               <div className="form-layout">
               {formMessage.message && <div className={`notification ${formMessage.type}`}>
                     {formMessage.message}</div>}

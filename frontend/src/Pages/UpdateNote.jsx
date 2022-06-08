@@ -1,12 +1,14 @@
 import {useState,useContext} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { GlobalContext } from '../store/GlobalState';
 
-const NewNote = () => {
+const UpdateNote = () => {
   const navigate = useNavigate();
-  const {user} = useContext(GlobalContext);
+  const {user,notes} = useContext(GlobalContext);
+  const {id} = useParams()
+  const initial = notes.find(note=> note._id === id);
 
-  const[note,setNote] = useState({title:'',body:''});
+  const[note,setNote] = useState({title:initial.title,body:initial.body});
   const [formMessage,setFormMessage] = useState({
     type:'',
     message:''
@@ -19,19 +21,15 @@ const NewNote = () => {
     },3000)
 }
 
-  const addNote = (e)=>{
+  const updateNote =  async (e)=>{
     e.preventDefault();
     if(!note.title.length || !note.body.length){
        return showMessage('error','Please fill in all fields');
     }
-    handleAddNote();
-  }
-
-  const handleAddNote = async()=>{
 
     try {
-        const res = await fetch('http://localhost:5000/notes',{
-            method:'POST',
+        const res = await fetch(`http://localhost:5000/notes/${initial._id}`,{
+            method:'PUT',
             headers:{
                 'Content-Type':'application/json',
                 'Accepts':'application/json',
@@ -40,11 +38,11 @@ const NewNote = () => {
             body:JSON.stringify(note)
         });
 
-        const data = await res.json(); 
-        if(res.status !== 201){
+        const data = await res.json();
+        if(res.status !== 200){
            return showMessage('error',data.message);
         }
-        showMessage('success','Note added');
+        showMessage('success','Note Updated');
         setTimeout(()=>navigate('/notes'),500)
     } catch (error) {
         showMessage('error','Unable to connect');
@@ -53,20 +51,20 @@ const NewNote = () => {
 
   return (
     <div className='new-note'>
-        <h2>New note</h2>
+        <h2>Update note</h2>
         <div className="form-layout">
         {formMessage.message && <div className={`notification ${formMessage.type}`}>
                     {formMessage.message}</div>}
-          <form onSubmit ={addNote}>
+          <form onSubmit ={updateNote}>
             <div className="fields">
                 <label htmlFor="title">Title</label>
-                <input type="text" id="title" 
+                <input type="text" id="title" value={note.title}
                   onChange={(e)=> setNote({...note,title:e.target.value})}                          
                 />
             </div>
             <div className="fields">
                 <label htmlFor="body">Body</label>
-                <textarea id="body" cols={30} rows={10}
+                <textarea id="body" cols={30} rows={10} value={note.body}
                    onChange={(e)=> setNote({...note,body:e.target.value})}                          
                 ></textarea>
             </div>
@@ -77,4 +75,4 @@ const NewNote = () => {
   )
 }
 
-export default NewNote
+export default UpdateNote

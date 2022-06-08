@@ -4,6 +4,7 @@ import StateReducer from './StateReducer';
 const initialState = {
     user:{
         name:'',
+        email:'',
         token:''
     },
     notes:[]

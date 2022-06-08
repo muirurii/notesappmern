@@ -37,7 +37,7 @@ const Favorites = () => {
                 return <Note key={note._id} index={i} note={note}/>
             })}
         </div>
-    ) : ' no favorites to show'}
+    ) : <p className="no-notes">No favorite notes</p>}
     </div>
   )
 }

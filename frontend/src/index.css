@@ -136,6 +136,7 @@ nav a:hover svg {
     position: absolute;
     left: 0;
     top: -.8em;
+    height: 20px;
 }
 
 .notification.error {
@@ -167,6 +168,10 @@ nav a:hover svg {
     display: block;
     margin-top: 1em;
     background-color: var(--gray);
+}
+
+.no-notes {
+    text-align: center;
 }
 
 .notes {
@@ -231,7 +236,6 @@ nav a:hover svg {
 }
 
 .note button {
-    display: inline-block;
     margin-right: 1em;
     border: none;
     background-color: transparent;
@@ -249,6 +253,13 @@ nav a:hover svg {
 
 .favorite.liked {
     color: var(--bright);
+    animation: shake 200ms 2;
+}
+
+@keyframes shake {
+    to {
+        transform: scale(1.1);
+    }
 }
 
 .delete {
@@ -257,5 +268,75 @@ nav a:hover svg {
 
 .new-note .form-layout {
     margin: 0 auto;
+    width: fit-content;
+}
+
+.profile-container {
+    padding-top: 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile {
+    line-height: 2;
+}
+
+.text {
+    position: relative;
+    z-index: 3;
+    background-color: var(--light);
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+}
+
+.profile-container button {
+    border: none;
+    background-color: transparent;
+    padding: .5em .8em;
+    border-radius: 3px;
+}
+
+.menu {
+    background-color: var(--light);
+}
+
+.menu button {
+    background-color: var(--fade);
+}
+
+.menu button:hover {
+    border-color: var(--dark);
+}
+
+button.update {
+    display: inline-block;
+    margin-right: 5px;
+    background-color: var(--gray);
+}
+
+.update-form {
+    transform: translateY(-100%);
+    transition: 400ms ease-in-out;
+    z-index: -1;
+}
+
+.update-form.show {
+    transform: unset;
+}
+
+.update-form .notification {
+    position: relative;
+    top: 5px;
+}
+
+.update-form button {
+    padding: .8em 1em;
+}
+
+.update-form input {
     width: fit-content;
 }

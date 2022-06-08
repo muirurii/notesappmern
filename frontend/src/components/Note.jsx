@@ -1,6 +1,7 @@
 import {FaPen, FaTrash,FaHeart} from 'react-icons/fa';
 import { useContext } from 'react';
 import { GlobalContext } from '../store/GlobalState';
+import { Link } from 'react-router-dom';
 
 const Note = ({note,index}) => {
 
@@ -57,7 +58,7 @@ const Note = ({note,index}) => {
   return (
     <div className="note"> 
         <button className="delete" onClick={handleDelete}><FaTrash /></button>
-        <button className="edit" onClick={handleDelete}><FaPen /></button>
+        <Link className="edit" to={`/update/${note._id}`}><FaPen /></Link>
         <button className={`favorite ${note.favorite ? 'liked' : null}`} onClick={handleLike}><FaHeart /></button>
         <h3><span className="count">{index + 1}.</span> {note.title}</h3> 
         <p>{note.body}</p>

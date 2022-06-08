@@ -21,10 +21,14 @@ const Login = () => {
         password:''
     });
 
-    const [formMessage,setFormMessage] = useState({
-        type:'',
-        message:''
-    });
+    const [formMessage,setFormMessage] = useState({type:'',message:''});
+
+    const showMessage = (type,message)=>{
+            setFormMessage({type,message});
+            setTimeout(()=>{
+                setFormMessage({type:'', message:''})
+            },3000)
+        }
 
     const changeLogindata = (value)=>{
         setLogindata({
@@ -33,19 +37,7 @@ const Login = () => {
         });
     }
 
-    const showMessage = (type,message)=>{
-        setFormMessage({
-            type,
-            message
-        });
-
-        setTimeout(()=>{
-            setFormMessage({
-                type:'',
-                message:''
-            })
-        },3000)
-    }
+   
 
     const handleLogin = async(e)=>{
         e.preventDefault();
@@ -69,7 +61,7 @@ const Login = () => {
                return showMessage('error',data.message);
             }
             showMessage('success','Logged in');
-            setUser({name:data.username,token: data.accessToken})
+            setUser({name:data.username,email:data.email,token: data.accessToken})
             setTimeout(()=> navigate('/notes'), 1000)
 
         } catch (error) {
@@ -79,7 +71,7 @@ const Login = () => {
 
   return (
     <div>
-        <h2>Log In <BiLogIn /></h2>
+        <h2 className="center">Log In <BiLogIn /></h2>
             <div className="form-layout">
                 {formMessage.message && <div className={`notification ${formMessage.type}`}>
                     {formMessage.message}</div>}
