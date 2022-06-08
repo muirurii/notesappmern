@@ -1,0 +1,261 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --dark: #000c0a;
+    --light: #eef5f5;
+    --gray: #00e2b1;
+    --bright: #ff5100;
+    --fade: #9b9a9a85;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn {
+    padding: 1em 3em;
+    border: none;
+    border-radius: 3px;
+}
+
+a {
+    text-decoration: none;
+}
+
+button {
+    cursor: pointer;
+}
+
+a,
+button,
+input,
+textarea {
+    font-family: inherit;
+    color: inherit;
+    outline: none;
+}
+
+input,
+textarea {
+    padding-left: 10px;
+}
+
+body {
+    margin: 0;
+    padding-bottom: 2em;
+    font-family: 'Work Sans', serif, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--light);
+    color: var(--dark);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2em;
+    height: 90px;
+    background-color: var(--light);
+    box-shadow: 0px 1px 2px var(--dark);
+}
+
+header h2 {
+    color: var(--gray);
+}
+
+h2 {
+    text-align: center;
+    font-weight: normal;
+    padding: 1em;
+}
+
+nav a {
+    display: inline-block;
+    margin-right: 1.5em;
+}
+
+nav a:hover {
+    opacity: .8;
+}
+
+nav svg {
+    margin-right: 4px;
+    transition: 300ms;
+    color: inherit;
+}
+
+nav a:hover svg {
+    transform: rotateZ(10deg);
+}
+
+.home {
+    height: calc(100vh - 90px);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    place-items: center;
+    position: relative;
+}
+
+.clip {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 50%;
+    background-color: var(--dark);
+    transition: transform 500ms ease-in-out;
+    z-index: 2;
+}
+
+.clip.right {
+    transform: translateX(100%);
+}
+
+.clip button {
+    background-color: var(--gray);
+    border-radius: 40px;
+}
+
+.home>div {
+    padding: 2em 1em;
+}
+
+.form-layout {
+    position: relative;
+}
+
+.notification {
+    font-size: .9rem;
+    position: absolute;
+    left: 0;
+    top: -.8em;
+}
+
+.notification.error {
+    color: red;
+}
+
+.notification.success {
+    color: green;
+}
+
+.form-layout label {
+    display: block;
+    padding: .4em 0;
+}
+
+.form-layout input {
+    height: 35px;
+}
+
+.form-layout input,
+.form-layout textarea {
+    width: 300px;
+    border-radius: 3px;
+    background-color: transparent;
+    border: .5px solid var(--dark);
+}
+
+.form-layout button {
+    display: block;
+    margin-top: 1em;
+    background-color: var(--gray);
+}
+
+.notes {
+    margin-left: 1em;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1em;
+}
+
+.note {
+    padding: 1em;
+    max-width: 500px;
+    height: fit-content;
+    border-radius: 3px;
+    box-shadow: 1px 1px 2px var(--fade), inset .5px .5px 1px var(--fade);
+}
+
+.note h3 {
+    font-weight: normal;
+    width: fit-content;
+    position: relative;
+    color: var(--bright);
+}
+
+.count {
+    color: var(--dark);
+}
+
+.note h3::after,
+.note h3::before {
+    content: '';
+    position: absolute;
+    left: calc(-.8em);
+}
+
+.note h3::after {
+    width: calc(100% - 1px + 1em);
+    bottom: -1px;
+    height: 1px;
+    background-color: var(--gray);
+}
+
+.note h3::before {
+    width: 1em;
+    bottom: -5px;
+    height: 5px;
+    z-index: 2;
+    background-color: var(--bright);
+}
+
+.note p {
+    font-weight: 400;
+    font-size: .9rem;
+    padding-top: 1em;
+}
+
+.time {
+    font-weight: lighter;
+    font-size: .7em;
+    float: right;
+    padding-top: 1em;
+}
+
+.note button {
+    display: inline-block;
+    margin-right: 1em;
+    border: none;
+    background-color: transparent;
+    float: right;
+}
+
+.edit {
+    color: var(--gray);
+}
+
+.favorite {
+    color: var(--dark);
+    transition: color 400ms;
+}
+
+.favorite.liked {
+    color: var(--bright);
+}
+
+.delete {
+    color: red;
+}
+
+.new-note .form-layout {
+    margin: 0 auto;
+    width: fit-content;
+}
