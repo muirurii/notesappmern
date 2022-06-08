@@ -77,15 +77,18 @@ const updateNote = async(req, res) => {
         if (note.user.toString() !== userId) {
             return res.sendStatus(401);
         }
-        await Note.findByIdAndUpdate(noteId, { title, body });
+        const favorite = req.body.favorite;
+        const update = { title, body }
+        if (favorite !== undefined) {
+            update.favorite = favorite
+        }
+        await Note.findByIdAndUpdate(noteId, update);
         const updatedNote = await Note.findById(noteId);
         res.json(updatedNote);
 
     } catch (error) {
         res.status(500).json(error.message);
     }
-
-
 }
 
 module.exports = {

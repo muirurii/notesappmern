@@ -9,10 +9,10 @@ const registerUser = async(req, res) => {
     if (!username || !email || !password) return res.status(400).json({ message: 'Please fill in all required fields' });
 
     try {
-        const duplicate = await User.findOne({ username });
+        const duplicate = await checkDuplicate(username);
 
         if (duplicate !== null) {
-            return res.status(400).json({ message: "username not available " });
+            return res.status(409).json({ message: "username is not available" });
         }
 
         const hashedPwd = await bcrypt.hash(password, 10);
@@ -28,6 +28,7 @@ const registerUser = async(req, res) => {
         res.status(201).json({
             message: 'success',
             username: user.username,
+            email: email,
             accessToken
         });
 
@@ -35,6 +36,10 @@ const registerUser = async(req, res) => {
         res.status(400).json(error.message);
     }
 
+}
+const checkDuplicate = async(username) => {
+    const duplicate = await User.findOne({ username });
+    return duplicate;
 }
 
 const loginUser = async(req, res) => {
@@ -49,7 +54,7 @@ const loginUser = async(req, res) => {
         if (!verifyPassword) return res.status(400).json({ message: 'Wrong credentials' });
 
         const accessToken = jwt.sign({ username, id: userInDB._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '1d' });
-        res.json({ username, message: 'logged in', accessToken });
+        res.json({ username, email: userInDB.email, message: 'logged in', accessToken });
 
     } catch (error) {
         res.sendStatus(500);
@@ -84,8 +89,8 @@ const updateUser = async(req, res) => {
         const { newUsername, newEmail } = req.body;
 
         if (!newUsername || !newEmail) return res.status(400).json('Please fill in all required fields');
-        const duplicate = await User.findOne({ username: newUsername });
-        if (duplicate) return res.sendStatus(204);
+        const duplicate = await checkDuplicate(newUsername);
+        if (duplicate && requestedUsername !== duplicate.username) return res.status(409).json({ message: 'username is not available' });
 
         const newData = {
             username: newUsername,
@@ -94,7 +99,14 @@ const updateUser = async(req, res) => {
 
         await User.findOneAndUpdate({ username: requestedUsername }, newData);
         const updatedUser = await User.findOne({ username: newUsername });
-        res.json(updatedUser);
+        const accessToken = jwt.sign({ username: updatedUser.username, id: updatedUser._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '1d' });
+
+        res.json({
+            username: updatedUser.username,
+            email: updatedUser.email,
+            message: 'updated',
+            accessToken
+        });
     } catch (error) {
         res.sendStatus(500);
     }
@@ -108,10 +120,10 @@ const deleteUser = async(req, res) => {
         if (!username) return res.sendStatus(204);
 
         const user = await User.findOne({ username });
-        if (!user) return res.sendStatus(204);
+        if (!user) return res.status(400).json({ message: 'user not found' });
 
         await user.remove();
-        res.json(username);
+        res.sendStatus(204);
 
     } catch (error) {
         res.sendStatus(500);
