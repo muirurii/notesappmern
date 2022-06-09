@@ -1,5 +1,9 @@
 const StateReducer = (state, action) => {
     switch (action.type) {
+        case 'setLoading':
+            {
+                return {...state, loading: action.payload }
+            }
         case 'setUser':
             {
                 return {...state, user: action.payload }

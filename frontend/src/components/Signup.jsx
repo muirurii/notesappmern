@@ -12,31 +12,21 @@ const Signup = () => {
         password:'',
         repeatPassword:''
     });
-
-    const changeSignupdata = (value)=>{
-        setSignupdata({
-            ...signupData,
-            ...value
+    
+    const showLoader = (payload)=>{
+        dispatch({
+            type:'setLoading',
+            payload
         });
+    };
+    const changeSignupdata = (value)=>{
+        setSignupdata({...signupData,...value});
     }
 
-    const [formMessage,setFormMessage] = useState({
-        type:'',
-        message:''
-    });
-
+    const [formMessage,setFormMessage] = useState({type:'',message:''});
     const showMessage = (type,message)=>{
-        setFormMessage({
-            type,
-            message
-        });
-
-        setTimeout(()=>{
-            setFormMessage({
-                type:'',
-                message:''
-            })
-        },3000)
+        setFormMessage({type,message});
+        setTimeout(()=>setFormMessage({type:'',message:''}),3000)
     }
 
     const setUser = (payload)=>{
@@ -47,12 +37,11 @@ const Signup = () => {
     }
 
     const handleSignup = async(e)=>{
-
         e.preventDefault();
         if(!signupData.password.length || !signupData.username.length || !signupData.email.length || !signupData.repeatPassword.length){
            return  showMessage('error','Please fill in all fields');
         }
-
+        showLoader(true);
         try {
             const res = await fetch('http://localhost:5000/users/register',{
                 method:'POST',
@@ -65,14 +54,17 @@ const Signup = () => {
 
             const data = await res.json();
             
-            if(res.status === 400){
-               return showMessage('error',data.message);
+            if(res.status === 201){ 
+                showMessage('success','Registered');
+                setUser({name:data.username,email:data.email,token:data.accessToken})
+                navigate('/notes');
+               return showLoader(false);
             }
-            showMessage('success','Registered');
-            setUser({name:data.username,email:data.email,token:data.accessToken})
-            navigate('/notes');
+           showLoader(false);
+           showMessage('error',data.message);
         } catch (error) {
             showMessage('error','Unable to connect');
+            showLoader(false);
         }
     }
 

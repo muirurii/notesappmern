@@ -7,7 +7,8 @@ const initialState = {
         email:'',
         token:''
     },
-    notes:[]
+    notes:[],
+    loading:false
 }
 
 export const GlobalContext = createContext();
@@ -20,6 +21,7 @@ export const GlobalProvider = ({children})=>{
         <GlobalContext.Provider value={{
             user:state.user,
             notes:state.notes,
+            loading:state.loading,
             dispatch
         }
         }>

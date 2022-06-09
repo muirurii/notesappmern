@@ -12,7 +12,7 @@ function App() {
   return (
     <GlobalProvider>
       <BrowserRouter>
-        <Header />
+        <Header />  
         <Routes>
           <Route path='/' element={<Home />}></Route>
           <Route path='/profile' element={<Profile />}></Route>

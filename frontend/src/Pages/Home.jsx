@@ -1,14 +1,12 @@
 import Signup from "../components/Signup";
 import Login from "../components/Login";
-import { useState } from "react";
+import { useState} from "react";
 
 const Home = ()=>{
-
     const [cover,setCover] = useState({
         position:'left',
         text: 'Signup'
     });
-
     const revealCard = ()=>{
         setCover({
             position: cover.position === 'left' ? 'right' : 'left',

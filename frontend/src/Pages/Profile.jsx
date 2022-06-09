@@ -12,14 +12,18 @@ const Profile = () => {
     newEmail:user.email
   });
 
-  const resetUser = ()=>{
+  const showLoader = (payload)=>{
     dispatch({
-      type:'setUser',
-      payload:{}
-    })
+        type:'setLoading',
+        payload
+    });
+};
+  const resetUser = ()=>{
+    dispatch({type:'setUser',payload:{}})
   }
 
   const deleteAccount = async ()=>{
+    showLoader(true);
     try {
       const res = await fetch(`http://localhost:5000/users/${user.name}`,{
         method:'DELETE',
@@ -32,9 +36,11 @@ const Profile = () => {
 
     if(res.status === 204){
         resetUser()
+        showLoader(false);
         navigate('/');
       } 
     } catch (error) {
+      showLoader(false);
       console.log(error)
     }
   }
@@ -55,7 +61,7 @@ const Profile = () => {
     }
   const updateUser = async (e)=>{
     e.preventDefault();
-
+    showLoader(true);
     try {
       const res = await fetch(`http://localhost:5000/users/${user.name}`,{
         method:'PUT',
@@ -69,15 +75,18 @@ const Profile = () => {
 
     const data = await res.json()
     if(res.status === 409){
-      return showMessage('error', data.message)
+      showLoader(false);
+      return showMessage('error', data.message);
     }
     if(res.status === 200){
-      setUser({name:data.username,email:data.email,token: data.accessToken})
-      return showMessage('success', 'updated')
+      setUser({name:data.username,email:data.email,token: data.accessToken});
+      showLoader(false);
+      return showMessage('success', 'updated');
     }
 
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      showLoader(false);
     }
   }
 

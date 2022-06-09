@@ -1,11 +1,10 @@
-import { useState,useContext } from "react";
+import { useState,useContext,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {GlobalContext} from "../store/GlobalState";
 import {BiLogIn} from 'react-icons/bi';
 
 
 const Login = () => {
-
     const {dispatch}= useContext(GlobalContext);
     const setUser = (payload)=>{
         dispatch({
@@ -13,38 +12,33 @@ const Login = () => {
             payload
         })
     }
+     
+    const showLoader = (payload)=>{
+        dispatch({
+            type:'setLoading',
+            payload
+        });
+    };
 
     const navigate = useNavigate();
-
-    const[loginData,setLogindata] = useState({
-        username:'',
-        password:''
-    });
-
+    const[loginData,setLogindata] = useState({username:'',password:''});
     const [formMessage,setFormMessage] = useState({type:'',message:''});
 
     const showMessage = (type,message)=>{
             setFormMessage({type,message});
-            setTimeout(()=>{
-                setFormMessage({type:'', message:''})
-            },3000)
+            setTimeout(()=>setFormMessage({type:'', message:''}),3000);
         }
 
     const changeLogindata = (value)=>{
-        setLogindata({
-            ...loginData,
-            ...value
-        });
+        setLogindata({...loginData,...value});
     }
-
-   
 
     const handleLogin = async(e)=>{
         e.preventDefault();
         if(!loginData.password.length || !loginData.username){
            return  showMessage('error','Please fill in all fields');
         }
-
+        showLoader(true);
         try {
             const res = await fetch('http://localhost:5000/users/login',{
                 method:'POST',
@@ -58,13 +52,15 @@ const Login = () => {
             const data = await res.json();
             
             if(res.status === 400){
+                showLoader(false);
                return showMessage('error',data.message);
             }
             showMessage('success','Logged in');
             setUser({name:data.username,email:data.email,token: data.accessToken})
-            setTimeout(()=> navigate('/notes'), 1000)
-
+            navigate('/notes');
+            showLoader(false);
         } catch (error) {
+            showLoader(false);
             showMessage('error','Unable to connect');
         }
     }

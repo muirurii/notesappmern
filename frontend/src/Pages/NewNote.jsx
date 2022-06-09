@@ -4,19 +4,20 @@ import { GlobalContext } from '../store/GlobalState';
 
 const NewNote = () => {
   const navigate = useNavigate();
-  const {user} = useContext(GlobalContext);
+  const {user,dispatch} = useContext(GlobalContext);
 
+  const showLoader = (payload)=>{
+    dispatch({
+        type:'setLoading',
+        payload
+    }); 
+  };
   const[note,setNote] = useState({title:'',body:''});
-  const [formMessage,setFormMessage] = useState({
-    type:'',
-    message:''
-  });
+  const [formMessage,setFormMessage] = useState({type:'',message:''});
 
   const showMessage = (type,message)=>{
     setFormMessage({type,message});
-    setTimeout(()=>{
-        setFormMessage({type:'',message:''})
-    },3000)
+    setTimeout(()=> setFormMessage({type:'',message:''}),3000);
 }
 
   const addNote = (e)=>{
@@ -24,11 +25,11 @@ const NewNote = () => {
     if(!note.title.length || !note.body.length){
        return showMessage('error','Please fill in all fields');
     }
+    showLoader(true);
     handleAddNote();
   }
 
   const handleAddNote = async()=>{
-
     try {
         const res = await fetch('http://localhost:5000/notes',{
             method:'POST',
@@ -45,9 +46,11 @@ const NewNote = () => {
            return showMessage('error',data.message);
         }
         showMessage('success','Note added');
-        setTimeout(()=>navigate('/notes'),500)
+        navigate('/notes');
+        showLoader(false);
     } catch (error) {
         showMessage('error','Unable to connect');
+        showLoader(false);
     }
 }
 

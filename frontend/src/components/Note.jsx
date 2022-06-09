@@ -4,9 +4,13 @@ import { GlobalContext } from '../store/GlobalState';
 import { Link } from 'react-router-dom';
 
 const Note = ({note,index}) => {
-
     const {dispatch,user} = useContext(GlobalContext);
-
+    const showLoader = (payload)=>{
+        dispatch({
+            type:'setLoading',
+            payload
+        });
+    };
     const deleteFromState = (payload)=>{
         dispatch({
             type:'removeNote',
@@ -15,6 +19,7 @@ const Note = ({note,index}) => {
     }
 
     const handleDelete = async ()=>{
+        showLoader(true);
         try {
             const res = await fetch(`http://localhost:5000/notes/${note._id}`,{
                 method:'DELETE',
@@ -27,8 +32,10 @@ const Note = ({note,index}) => {
 
             const data = await res.json();
             deleteFromState(data);
+            showLoader(false);
         } catch (error) {
             console.error(error);
+            showLoader(false);
         }
     }
 
@@ -57,9 +64,9 @@ const Note = ({note,index}) => {
    }
   return (
     <div className="note"> 
-        <button className="delete" onClick={handleDelete}><FaTrash /></button>
-        <Link className="edit" to={`/update/${note._id}`}><FaPen /></Link>
-        <button className={`favorite ${note.favorite ? 'liked' : null}`} onClick={handleLike}><FaHeart /></button>
+        <button data-tool-tip="delete" className="delete note-btn" onClick={handleDelete}><FaTrash /></button>
+        <Link data-tool-tip="edit" className="edit note-btn" to={`/update/${note._id}`}><FaPen /></Link>
+        <button data-tool-tip="favorite" className={`favorite note-btn ${note.favorite ? 'liked' : null}`} onClick={handleLike}><FaHeart /></button>
         <h3><span className="count">{index + 1}.</span> {note.title}</h3> 
         <p>{note.body}</p>
         <span className="time">{note.createdAt}</span>

@@ -1,46 +1,23 @@
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext,useState } from "react";
 import {GlobalContext} from "../../store/GlobalState";
-import { FaHeart, FaUserAlt} from "react-icons/fa";
-import {GrNotes,GrDocumentText} from "react-icons/gr";
+import { BiLoader, BiMenu } from "react-icons/bi";
+import Menu from "./Menu";
 
 const Header = () => {
-  const {user} = useContext(GlobalContext);
+  const {user,loading} = useContext(GlobalContext);
+  const[menu,setMenu] = useState(false);
+
   return (
     <header>
         <h2><Link to={'/'}>NotesManager</Link></h2>
-        <nav>
-            {!user.name && <Link to={'/'}>Login / Signup</Link>}
-            {user.name && (<>
-                    <Link to={'/notes'}>
-                      <span className="center">
-                        <GrNotes />
-                        <span>Notes</span>
-                      </span>
-                    </Link> 
-                    <Link to={'/new'}>
-                      <span className="center">
-                        <GrDocumentText />
-                        <span>Add new</span>
-                      </span>
-                    </Link> 
-                    <Link to={'/favorites'}>
-                      <span className="center">
-                        <FaHeart />
-                        <span>Favorites</span>
-                      </span>
-                    </Link> 
-                    <Link to={'/profile'}>
-                      <span className="center">
-                        <FaUserAlt />
-                        <span>Profile</span>
-                      </span>
-                    </Link> 
-            </>)
-           }
-        </nav>
+        <nav className="bg-menu">{user.name && (<Menu />)}</nav>
+        {menu && <nav onClick={()=> setMenu(!menu)} className="sm-menu">{user.name && (<Menu />)}</nav>}
+        {!user.name && <Link to={'/'}>Login / Signup</Link>}
+        {loading &&<div className="loader center"><BiLoader /></div> }
+        {user.name && <BiMenu className="hamb" onClick={()=> setMenu(!menu)}/>}   
     </header>
   )
 }
 
-export default Header
+export default Header;

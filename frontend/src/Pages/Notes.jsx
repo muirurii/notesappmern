@@ -5,9 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import fetchNotes from '../custom/fetchNotes';
 
 const Notes = () => {
-
     const {user,dispatch,notes} = useContext(GlobalContext);
-
     const setNotes = (payload)=>{
         dispatch({
             type:'setNotes',
