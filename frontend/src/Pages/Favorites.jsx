@@ -1,4 +1,4 @@
-import {useContext,useEffect} from 'react'
+import {useCallback, useContext,useEffect} from 'react'
 import { GlobalContext } from '../store/GlobalState';
 import Note from '../components/Note';
 import { useNavigate } from 'react-router-dom';
@@ -8,15 +8,19 @@ const Favorites = () => {
 
     const {user,dispatch,notes} = useContext(GlobalContext);
     const favorites = notes.filter(note => note.favorite);
-    const setNotes = (payload)=>{
+    const navigate = useNavigate();
+    const setNotes = useCallback((payload)=>{
         dispatch({
             type:'setNotes',
             payload
         })
-    }
-    const navigate = useNavigate();
+    },[dispatch]);
+    const showLoader = useCallback((payload)=>{
+        dispatch({type:'setLoading',payload});
+    },[dispatch]);
 
     useEffect(()=>{
+        showLoader(true);
         const fetchData = async(token)=>{
             const data = await fetchNotes(token);
             if(data !== false){
@@ -25,8 +29,9 @@ const Favorites = () => {
                 navigate('/')
             }
         }
+        showLoader(false);
         fetchData(user.token);
-    },[]);
+    },[setNotes,navigate,user.token,showLoader]);
 
   return (
     <div>

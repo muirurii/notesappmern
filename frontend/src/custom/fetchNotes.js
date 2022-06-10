@@ -1,6 +1,6 @@
 const fetchNotes = async(token) => {
     try {
-        const res = await fetch('http://localhost:5000/notes', {
+        const res = await fetch('/notes', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

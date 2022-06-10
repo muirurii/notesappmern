@@ -6,22 +6,16 @@ import { Link } from 'react-router-dom';
 const Note = ({note,index}) => {
     const {dispatch,user} = useContext(GlobalContext);
     const showLoader = (payload)=>{
-        dispatch({
-            type:'setLoading',
-            payload
-        });
+        dispatch({type:'setLoading',payload});
     };
     const deleteFromState = (payload)=>{
-        dispatch({
-            type:'removeNote',
-            payload
-        })
+        dispatch({type:'removeNote',payload});
     }
 
     const handleDelete = async ()=>{
         showLoader(true);
         try {
-            const res = await fetch(`http://localhost:5000/notes/${note._id}`,{
+            const res = await fetch(`/notes/${note._id}`,{
                 method:'DELETE',
                 headers:{
                     'Content-Type':'application/json',
@@ -41,7 +35,7 @@ const Note = ({note,index}) => {
 
    const handleLike = async(update)=>{
         try {
-            const res = await fetch(`http://localhost:5000/notes/${note._id}`,{
+            const res = await fetch(`/notes/${note._id}`,{
                 method:'PUT',
                 headers:{
                     'Content-Type':'application/json',
@@ -66,10 +60,10 @@ const Note = ({note,index}) => {
     <div className="note"> 
         <button data-tool-tip="delete" className="delete note-btn" onClick={handleDelete}><FaTrash /></button>
         <Link data-tool-tip="edit" className="edit note-btn" to={`/update/${note._id}`}><FaPen /></Link>
-        <button data-tool-tip="favorite" className={`favorite note-btn ${note.favorite ? 'liked' : null}`} onClick={handleLike}><FaHeart /></button>
+        <button data-tool-tip={`${note.favorite ? 'unlike' : 'like'}`} className={`favorite note-btn ${note.favorite ? 'liked' : null}`} onClick={handleLike}><FaHeart /></button>
         <h3><span className="count">{index + 1}.</span> {note.title}</h3> 
-        <p>{note.body}</p>
-        <span className="time">{note.createdAt}</span>
+        <p>{[...note.body].map((l,i)=> l === '.' ? <span key={i}>. <br /></span> : <span key={i}>{l}</span>)}</p>
+        <span className="time">{new Date(note.createdAt).toLocaleString('en-US')}</span>
     </div>
   )
 }

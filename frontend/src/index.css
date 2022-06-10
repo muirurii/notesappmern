@@ -6,10 +6,9 @@
 
 :root {
     --dark: #000c0a;
-    --light: #eef5f5;
-    --gray: #00e2b1;
-    --bright: #ff5100;
-    --fade: #9b9a9a85;
+    --light: #ffffff;
+    --gray: #fd705d;
+    --fade: #e7e6e2;
 }
 
 .center {
@@ -22,6 +21,11 @@
     padding: 1em 3em;
     border: none;
     border-radius: 3px;
+    transition: opacity 300ms ease-in-out;
+}
+
+.btn:hover {
+    opacity: .85;
 }
 
 a {
@@ -58,16 +62,17 @@ body {
     height: 100vh;
     width: 100vw;
     position: fixed;
-    top: 90px;
+    top: 0px;
     left: 0;
-    background-color: var(--light);
+    background-color: #ffffffdc;
+    backdrop-filter: blur(1px);
     z-index: 10;
 }
 
 .loader svg {
     width: 40px;
     height: 40px;
-    animation: rotate 1000ms linear infinite;
+    animation: rotate 900ms linear infinite;
 }
 
 @keyframes rotate {
@@ -88,6 +93,7 @@ header {
 
 header h2 {
     color: var(--gray);
+    padding: 0;
 }
 
 h2 {
@@ -211,11 +217,12 @@ nav a:hover svg {
     width: 300px;
     border-radius: 3px;
     background-color: transparent;
-    border: .5px solid var(--dark);
+    border: .5px solid var(--fade);
 }
 
 .form-layout button {
     display: block;
+    width: 100%;
     margin-top: 1em;
     background-color: var(--gray);
 }
@@ -225,25 +232,25 @@ nav a:hover svg {
 }
 
 .notes {
-    margin-left: 1em;
     display: grid;
+    padding-left: .5em;
     grid-template-columns: 1fr;
     grid-gap: 1em;
 }
 
 .note {
     padding: 1em;
-    max-width: 400px;
+    max-width: 320px;
     height: fit-content;
     border-radius: 3px;
-    box-shadow: 1px 1px 2px var(--fade), inset .5px .5px 1px var(--fade);
+    box-shadow: .5px .5px 1px var(--fade), inset .5px .5px 1px var(--fade);
 }
 
 .note h3 {
     font-weight: normal;
     width: fit-content;
     position: relative;
-    color: var(--bright);
+    text-transform: capitalize;
 }
 
 .count {
@@ -261,7 +268,7 @@ nav a:hover svg {
     width: calc(100% - 1px + 1em);
     bottom: -1px;
     height: 1px;
-    background-color: var(--gray);
+    background-color: var(--fade);
 }
 
 .note h3::before {
@@ -269,7 +276,7 @@ nav a:hover svg {
     bottom: -5px;
     height: 5px;
     z-index: 2;
-    background-color: var(--bright);
+    background-color: var(--gray);
 }
 
 .note p {
@@ -307,19 +314,24 @@ nav a:hover svg {
 
 .note-btn:hover::after {
     opacity: 1;
+    transform: rotateZ(-5deg);
+}
+
+.note-btn:hover {
+    transform: rotateZ(5deg);
 }
 
 .edit {
-    color: var(--gray);
+    color: var(--dark);
 }
 
 .favorite {
     color: var(--dark);
-    transition: color 400ms;
+    transition: color 200ms;
 }
 
 .favorite.liked {
-    color: var(--bright);
+    color: var(--gray);
 }
 
 .delete {
@@ -356,7 +368,9 @@ nav a:hover svg {
 .profile-container button {
     border: none;
     background-color: transparent;
-    padding: .5em .8em;
+    display: inline-block;
+    margin-top: 1em;
+    padding: .8em 1em;
     border-radius: 3px;
 }
 
@@ -373,7 +387,6 @@ nav a:hover svg {
 }
 
 button.update {
-    display: inline-block;
     margin-right: 5px;
     background-color: var(--gray);
 }
@@ -401,10 +414,6 @@ button.update {
     padding: 0em;
 }
 
-.update-form input {
-    width: fit-content;
-}
-
 @media(min-width:850px) {
     .bg-menu,
     .clip {
@@ -421,5 +430,11 @@ button.update {
     .notes,
     .home {
         grid-template-columns: repeat(2, 1fr);
+    }
+    .notes {
+        padding-left: 2em;
+    }
+    .note {
+        max-width: 400px;
     }
 }

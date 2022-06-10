@@ -1,4 +1,4 @@
-import {useContext,useEffect} from 'react'
+import {useCallback, useContext,useEffect} from 'react'
 import { GlobalContext } from '../store/GlobalState';
 import Note from '../components/Note';
 import { useNavigate } from 'react-router-dom';
@@ -6,15 +6,19 @@ import fetchNotes from '../custom/fetchNotes';
 
 const Notes = () => {
     const {user,dispatch,notes} = useContext(GlobalContext);
-    const setNotes = (payload)=>{
+    const setNotes =  useCallback((payload)=>{
         dispatch({
             type:'setNotes',
             payload
         })
-    }
+    },[dispatch]);
     const navigate = useNavigate();
+    const showLoader = useCallback((payload)=>{
+        dispatch({type:'setLoading',payload});
+    },[dispatch]);
 
     useEffect(()=>{
+        showLoader(true);
         const fetchData = async(token)=>{
             const data = await fetchNotes(token);
             if(data !== false){
@@ -22,9 +26,10 @@ const Notes = () => {
             }else{
                 navigate('/')
             }
+            showLoader(false);
         }
         fetchData(user.token);
-    },[]);
+    },[navigate,setNotes,user.token,showLoader]);
     
   return (
     <div>

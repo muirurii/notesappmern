@@ -13,10 +13,7 @@ const Profile = () => {
   });
 
   const showLoader = (payload)=>{
-    dispatch({
-        type:'setLoading',
-        payload
-    });
+    dispatch({type:'setLoading',payload});
 };
   const resetUser = ()=>{
     dispatch({type:'setUser',payload:{}})
@@ -25,7 +22,7 @@ const Profile = () => {
   const deleteAccount = async ()=>{
     showLoader(true);
     try {
-      const res = await fetch(`http://localhost:5000/users/${user.name}`,{
+      const res = await fetch(`/users/${user.name}`,{
         method:'DELETE',
         headers:{
             'Content-Type':'application/json',
@@ -63,7 +60,7 @@ const Profile = () => {
     e.preventDefault();
     showLoader(true);
     try {
-      const res = await fetch(`http://localhost:5000/users/${user.name}`,{
+      const res = await fetch(`/users/${user.name}`,{
         method:'PUT',
         headers:{
             'Content-Type':'application/json',
@@ -85,7 +82,7 @@ const Profile = () => {
     }
 
     } catch (error) {
-      console.log(error);
+      showMessage('error','unable to connect')
       showLoader(false);
     }
   }
@@ -97,7 +94,7 @@ const Profile = () => {
           <BiUserCircle className="profile-pic" />
           <p>username : @{user.name.toLowerCase()}</p>
           <p>email: {user.email.toLowerCase()}</p>
-          <h4>{notes.length} notes</h4>
+          <p>{notes.length} note{notes.length !==1 && 's'}</p>
           <div className="menu">
             <button className="update center" onClick={()=> setMenu(!menu)}>update profile
             {menu ? <BiChevronsDown /> : <BiChevronsUp /> } 

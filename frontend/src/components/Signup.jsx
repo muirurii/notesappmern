@@ -38,12 +38,15 @@ const Signup = () => {
 
     const handleSignup = async(e)=>{
         e.preventDefault();
-        if(!signupData.password.length || !signupData.username.length || !signupData.email.length || !signupData.repeatPassword.length){
+        if(!signupData.password.trim().length || !signupData.username.trim().length || !signupData.email.trim().length || !signupData.repeatPassword.length){
            return  showMessage('error','Please fill in all fields');
+        }
+        if(signupData.password !== signupData.repeatPassword){
+            return showMessage('error',"Passwords don't match");
         }
         showLoader(true);
         try {
-            const res = await fetch('http://localhost:5000/users/register',{
+            const res = await fetch('/users/register',{
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json',

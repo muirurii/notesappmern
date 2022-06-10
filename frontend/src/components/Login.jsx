@@ -1,4 +1,4 @@
-import { useState,useContext,useEffect } from "react";
+import { useState,useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {GlobalContext} from "../store/GlobalState";
 import {BiLogIn} from 'react-icons/bi';
@@ -40,7 +40,7 @@ const Login = () => {
         }
         showLoader(true);
         try {
-            const res = await fetch('http://localhost:5000/users/login',{
+            const res = await fetch('/users/login',{
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json',
@@ -56,7 +56,7 @@ const Login = () => {
                return showMessage('error',data.message);
             }
             showMessage('success','Logged in');
-            setUser({name:data.username,email:data.email,token: data.accessToken})
+            setUser({name:data.username,email:data.email,token: data.accessToken});
             navigate('/notes');
             showLoader(false);
         } catch (error) {

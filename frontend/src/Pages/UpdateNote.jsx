@@ -4,7 +4,7 @@ import { GlobalContext } from '../store/GlobalState';
 
 const UpdateNote = () => {
   const navigate = useNavigate();
-  const {user,notes} = useContext(GlobalContext);
+  const {user,notes,dispatch} = useContext(GlobalContext);
   const {id} = useParams()
   const initial = notes.find(note=> note._id === id);
 
@@ -21,14 +21,18 @@ const UpdateNote = () => {
     },3000)
 }
 
+const showLoader = (payload)=>{
+  dispatch({type:'setLoading',payload});
+};
+
   const updateNote =  async (e)=>{
     e.preventDefault();
     if(!note.title.length || !note.body.length){
        return showMessage('error','Please fill in all fields');
     }
-
+    showLoader(true);
     try {
-        const res = await fetch(`http://localhost:5000/notes/${initial._id}`,{
+        const res = await fetch(`/notes/${initial._id}`,{
             method:'PUT',
             headers:{
                 'Content-Type':'application/json',
@@ -39,13 +43,15 @@ const UpdateNote = () => {
         });
 
         const data = await res.json();
+        showLoader(false);
         if(res.status !== 200){
            return showMessage('error',data.message);
         }
         showMessage('success','Note Updated');
-        setTimeout(()=>navigate('/notes'),500)
+        navigate('/notes');
     } catch (error) {
         showMessage('error','Unable to connect');
+        showLoader(false);
     }
 }
 
@@ -68,7 +74,7 @@ const UpdateNote = () => {
                    onChange={(e)=> setNote({...note,body:e.target.value})}                          
                 ></textarea>
             </div>
-            <button type='submit' className='btn'>Add note</button>
+            <button type='submit' className='btn'>Update</button>
         </form>
         </div>
     </div>
